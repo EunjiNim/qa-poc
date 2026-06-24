@@ -1,0 +1,17 @@
+import { test } from '@playwright/test';
+import { BookingPage } from '../page-objects/BookingPage';
+
+{{#each this}}
+// risk: {{risk}} | id: {{id}}
+test('{{title}}', async ({ page }) => {
+  const booking = new BookingPage(page);
+  await booking.goto();
+{{#each steps}}
+  await booking.{{action}}({{#each args}}{{#if @index}}, {{/if}}'{{this}}'{{/each}});
+{{/each}}
+{{#each verify}}
+  await booking.{{action}}({{#each args}}{{#if @index}}, {{/if}}'{{this}}'{{/each}});
+{{/each}}
+});
+
+{{/each}}

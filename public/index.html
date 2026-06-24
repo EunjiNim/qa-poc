@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>마이클 정비소 예약 (데모)</title>
+<style>
+  body { font-family: sans-serif; max-width: 420px; margin: 60px auto; }
+  button { display: block; width: 100%; padding: 12px; margin: 6px 0; font-size: 15px; cursor: pointer; }
+  input { width: 100%; padding: 10px; margin: 10px 0; font-size: 15px; box-sizing: border-box; }
+  #payment-error { color: #c0392b; }
+  h2 { font-size: 18px; }
+</style>
+</head>
+<body>
+
+<section id="step-shop">
+  <h2>정비소 선택</h2>
+  <button class="shop-btn">미카 정비소</button>
+  <button class="shop-btn">서울 모터스</button>
+</section>
+
+<section id="step-slot" hidden>
+  <h2>시간 선택 — <span id="selected-shop"></span></h2>
+  <button class="slot-btn">10:00</button>
+  <button class="slot-btn">14:00</button>
+  <button class="slot-btn">16:00</button>
+</section>
+
+<section id="step-payment" hidden>
+  <h2>결제 정보 입력</h2>
+  <input id="card-number" placeholder="카드번호 (테스트: 0000 입력 시 결제 실패)" />
+  <button id="pay-btn">결제하기</button>
+  <p id="payment-error" hidden>결제에 실패했습니다. 다시 시도해주세요.</p>
+</section>
+
+<section id="step-confirm" hidden>
+  <h2>예약이 완료되었습니다</h2>
+  <p id="confirm-detail"></p>
+</section>
+
+<script>
+  let state = { shop: null, slot: null, bookedSlots: new Set() };
+
+  document.querySelectorAll('.shop-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.shop = btn.textContent;
+      document.getElementById('selected-shop').textContent = state.shop;
+      document.getElementById('step-shop').hidden = true;
+      document.getElementById('step-slot').hidden = false;
+    });
+  });
+
+  document.querySelectorAll('.slot-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      state.slot = btn.textContent;
+      document.getElementById('step-slot').hidden = true;
+      document.getElementById('step-payment').hidden = false;
+      document.getElementById('payment-error').hidden = true;
+    });
+  });
+
+  document.getElementById('pay-btn').addEventListener('click', () => {
+    const card = document.getElementById('card-number').value;
+    if (card === '0000') {
+      // 결제 실패 → 슬롯을 다시 예약 가능한 상태로 되돌림
+      document.getElementById('payment-error').hidden = false;
+      document.getElementById('step-payment').hidden = true;
+      document.getElementById('step-slot').hidden = false;
+    } else {
+      document.getElementById('step-payment').hidden = true;
+      document.getElementById('step-confirm').hidden = false;
+      document.getElementById('confirm-detail').textContent =
+        state.shop + ' / ' + state.slot + ' 예약이 확정되었습니다.';
+    }
+  });
+</script>
+</body>
+</html>
