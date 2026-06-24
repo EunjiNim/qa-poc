@@ -7,7 +7,8 @@ const PORT = process.env.PORT || 4321;
 const ROOT = path.join(__dirname, 'public');
 
 const server = http.createServer((req, res) => {
-  const filePath = path.join(ROOT, req.url === '/' ? 'index.html' : req.url);
+  const pathname = new URL(req.url, 'http://localhost').pathname;
+  const filePath = path.join(ROOT, pathname === '/' ? 'index.html' : pathname);
   fs.readFile(filePath, (err, data) => {
     if (err) {
       res.writeHead(404);

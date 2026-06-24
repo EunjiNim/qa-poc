@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<title>마이클 정비 리포트 (데모)</title>
+<style>
+  body { font-family: sans-serif; max-width: 420px; margin: 60px auto; }
+  .item { padding: 8px 0; border-bottom: 1px solid #eee; }
+  #mileage { font-size: 28px; font-weight: bold; }
+  #empty-state, #access-denied { color: #888; }
+  #access-denied { color: #c0392b; }
+</style>
+</head>
+<body>
+
+<section id="access-denied" hidden>
+  <h2>접근 권한이 없습니다</h2>
+  <p>본인 차량의 리포트만 조회할 수 있습니다.</p>
+</section>
+
+<section id="report-content" hidden>
+  <h2>이번 달 차량 리포트</h2>
+  <p>누적 주행거리</p>
+  <p id="mileage"></p>
+
+  <h3>정비 내역</h3>
+  <div id="maintenance-list"></div>
+  <p id="empty-state" hidden>이번 달 정비 내역이 없습니다.</p>
+</section>
+
+<script>
+  // 실제로는 백엔드 응답이지만, 데모에서는 URL의 scenario 파라미터로 데이터 상태를 흉내낸다.
+  const FIXTURES = {
+    normal: {
+      mileage: 45230,
+      items: ['엔진오일 교체 - 2025.03.10', '타이어 교체 - 2024.11.02'],
+    },
+    empty: {
+      mileage: 12000,
+      items: [],
+    },
+    large: {
+      mileage: 987654,
+      items: ['엔진오일 교체 - 2026.01.05'],
+    },
+  };
+
+  const scenario = new URLSearchParams(location.search).get('scenario') || 'normal';
+
+  if (scenario === 'unauthorized') {
+    document.getElementById('access-denied').hidden = false;
+  } else {
+    const data = FIXTURES[scenario] || FIXTURES.normal;
+    document.getElementById('report-content').hidden = false;
+    document.getElementById('mileage').textContent = data.mileage.toLocaleString('ko-KR') + ' km';
+
+    const list = document.getElementById('maintenance-list');
+    if (data.items.length === 0) {
+      document.getElementById('empty-state').hidden = false;
+    } else {
+      data.items.forEach((text) => {
+        const div = document.createElement('div');
+        div.className = 'item';
+        div.textContent = text;
+        list.appendChild(div);
+      });
+    }
+  }
+</script>
+</body>
+</html>

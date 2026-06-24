@@ -1,0 +1,14 @@
+import { test } from '@playwright/test';
+import { ReportPage } from '../page-objects/ReportPage';
+
+{{#each this}}
+// risk: {{risk}} | id: {{id}} | type: {{type}}
+test('{{title}}', async ({ page }) => {
+  const report = new ReportPage(page);
+  await report.goto('{{fixture_data.scenario}}');
+{{#each expected_display}}
+  await report.{{action}}({{#each args}}{{#if @index}}, {{/if}}'{{this}}'{{/each}});
+{{/each}}
+});
+
+{{/each}}

@@ -1,0 +1,42 @@
+[
+  {
+    "id": "TC-101",
+    "type": "display",
+    "title": "정상 데이터 표시",
+    "risk": "medium",
+    "fixture_data": { "scenario": "normal" },
+    "expected_display": [
+      { "action": "expectMileageDisplayed", "args": ["45,230 km"] }
+    ]
+  },
+  {
+    "id": "TC-102",
+    "type": "display",
+    "title": "정비 내역 없음 - 빈 상태 안내",
+    "risk": "medium",
+    "fixture_data": { "scenario": "empty" },
+    "expected_display": [
+      { "action": "expectEmptyState", "args": [] }
+    ]
+  },
+  {
+    "id": "TC-103",
+    "type": "display",
+    "title": "다른 사용자 리포트 접근 차단",
+    "risk": "high",
+    "fixture_data": { "scenario": "unauthorized" },
+    "expected_display": [
+      { "action": "expectAccessDenied", "args": [] }
+    ]
+  },
+  {
+    "id": "TC-104",
+    "type": "display",
+    "title": "대형 주행거리 값 - 레이아웃 시각적 회귀",
+    "risk": "low",
+    "fixture_data": { "scenario": "large" },
+    "expected_display": [
+      { "action": "expectVisualMatch", "args": ["report-large-mileage"] }
+    ]
+  }
+]

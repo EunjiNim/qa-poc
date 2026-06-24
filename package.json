@@ -8,16 +8,16 @@
     "generate": "node generator/generate-testcases.js",
     "build:spec": "node generator/build-spec.js",
     "pipeline": "npm run generate && npm run build:spec",
+    "generate:report": "node generator/generate-report-testcases.js",
+    "build:spec:report": "node generator/build-report-spec.js",
+    "pipeline:report": "npm run generate:report && npm run build:spec:report",
     "test": "playwright test"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "handlebars": "^4.7.9"
-  },
-  "devDependencies": {
     "@playwright/test": "^1.61.1",
-    "@types/node": "^26.0.0"
+    "handlebars": "^4.7.9"
   }
 }
