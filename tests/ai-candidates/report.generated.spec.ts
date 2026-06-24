@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { ReportPage } from '../page-objects/ReportPage';
+import { ReportPage } from '../../page-objects/ReportPage';
 
 // risk: medium | id: TC-101 | type: display
 test('정상 데이터 표시', async ({ page }) => {

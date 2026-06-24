@@ -1,5 +1,5 @@
 import { test } from '@playwright/test';
-import { BookingPage } from '../page-objects/BookingPage';
+import { BookingPage } from '../../page-objects/BookingPage';
 
 // risk: high | id: TC-001
 test('정상 예약 흐름', async ({ page }) => {
