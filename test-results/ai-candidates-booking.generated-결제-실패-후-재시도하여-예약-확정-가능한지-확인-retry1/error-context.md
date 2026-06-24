@@ -1,0 +1,75 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: ai-candidates\booking.generated.spec.ts >> 결제 실패 후 재시도하여 예약 확정 가능한지 확인
+- Location: tests\ai-candidates\booking.generated.spec.ts:26:5
+
+# Error details
+
+```
+Test timeout of 30000ms exceeded.
+```
+
+```
+Error: locator.click: Test timeout of 30000ms exceeded.
+Call log:
+  - waiting for getByRole('button', { name: '테스트 매장' })
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - heading "정비소 선택" [level=2] [ref=e3]
+  - button "미카 정비소" [ref=e4] [cursor=pointer]
+  - button "서울 모터스" [ref=e5] [cursor=pointer]
+```
+
+# Test source
+
+```ts
+  1  | import { Page, expect } from '@playwright/test';
+  2  | 
+  3  | // AI 테스트케이스 생성기에 "사용 가능한 action 목록"으로 그대로 전달되는 메서드들.
+  4  | // AI는 이 메서드 이름과 시그니처 밖의 동작을 임의로 만들어내지 않도록 프롬프트에서 제한된다.
+  5  | export class BookingPage {
+  6  |   constructor(private page: Page) {}
+  7  | 
+  8  |   async goto() {
+  9  |     await this.page.goto('/');
+  10 |   }
+  11 | 
+  12 |   async selectShop(name: string) {
+> 13 |     await this.page.getByRole('button', { name }).click();
+     |                                                   ^ Error: locator.click: Test timeout of 30000ms exceeded.
+  14 |   }
+  15 | 
+  16 |   async selectSlot(time: string) {
+  17 |     await this.page.getByRole('button', { name: time }).click();
+  18 |   }
+  19 | 
+  20 |   async payWithCard(cardNumber: string) {
+  21 |     await this.page.getByPlaceholder(/카드번호/).fill(cardNumber);
+  22 |     await this.page.getByRole('button', { name: '결제하기' }).click();
+  23 |   }
+  24 | 
+  25 |   async expectConfirmed() {
+  26 |     await expect(this.page.getByText('예약이 완료되었습니다')).toBeVisible();
+  27 |   }
+  28 | 
+  29 |   async expectPaymentFailed() {
+  30 |     await expect(this.page.getByText('결제에 실패했습니다')).toBeVisible();
+  31 |   }
+  32 | 
+  33 |   async expectSlotReopened(time: string) {
+  34 |     await expect(this.page.getByRole('button', { name: time })).toBeVisible();
+  35 |   }
+  36 | }
+  37 | 
+```

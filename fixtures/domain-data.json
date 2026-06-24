@@ -1,0 +1,14 @@
+{
+  "booking": {
+    "validShopNames": ["미카 정비소", "서울 모터스"],
+    "validSlotTimes": ["10:00", "14:00", "16:00"],
+    "paymentFailureTrigger": "카드번호가 정확히 '0000'일 때만 결제 실패. 그 외 모든 값은 성공 처리됨."
+  },
+  "reportScenarios": {
+    "normal": { "mileage": "45,230 km", "maintenanceItems": 2 },
+    "empty": { "mileage": "12,000 km", "maintenanceItems": 0 },
+    "large": { "mileage": "987,654 km", "maintenanceItems": 1 },
+    "unauthorized": { "note": "데이터 없음, 접근 차단 메시지만 표시" }
+  },
+  "_comment": "이 파일은 public/index.html, public/report.html의 실제 하드코딩된 데이터와 동기화되어야 합니다. 실제 프로덕션에서는 앱과 생성기가 같은 소스(API mock, fixture DB 등)를 참조하도록 만드는 게 맞습니다 — 지금처럼 두 군데서 따로 관리하면 한쪽만 바뀌었을 때 또 같은 문제가 재발합니다."
+}

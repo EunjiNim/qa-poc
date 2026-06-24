@@ -17,6 +17,10 @@ const AVAILABLE_ACTIONS = [
   'expectSlotReopened(time)',
 ];
 
+const DOMAIN_DATA = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'domain-data.json'), 'utf8')
+).booking;
+
 const SCHEMA_INSTRUCTION = `
 다음 요구사항을 바탕으로 회귀 테스트케이스를 JSON 배열로만 응답해. 설명 텍스트는 절대 붙이지 마.
 
@@ -34,6 +38,12 @@ verify에 risk:"low"로 표시하고 title에 "[POM 확장 필요]"를 접두로
 
 사용 가능한 action 목록:
 ${AVAILABLE_ACTIONS.map((a) => '- ' + a).join('\n')}
+
+아래는 실제 앱에서 유효한 값이야. 이 값 밖의 매장명/시간을 절대 지어내지 마.
+- 유효한 정비소 이름: ${DOMAIN_DATA.validShopNames.join(', ')}
+- 유효한 시간 슬롯: ${DOMAIN_DATA.validSlotTimes.join(', ')}
+- 결제 실패 트리거: ${DOMAIN_DATA.paymentFailureTrigger}
+  (일반적인 PG사 테스트 카드번호 관례를 가져다 쓰지 말고, 위 규칙 그대로 따라야 해)
 `;
 
 async function generateTestCases(requirementText) {

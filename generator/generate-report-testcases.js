@@ -13,6 +13,10 @@ const AVAILABLE_DISPLAY_ACTIONS = [
   'expectVisualMatch(snapshotName)',
 ];
 
+const REPORT_SCENARIOS = JSON.parse(
+  fs.readFileSync(path.join(__dirname, '..', 'fixtures', 'domain-data.json'), 'utf8')
+).reportScenarios;
+
 const SCHEMA_INSTRUCTION = `
 다음 화면 요구사항을 바탕으로 "조회형 화면" 테스트케이스를 JSON 배열로만 응답해. 설명 텍스트는 붙이지 마.
 
@@ -33,6 +37,10 @@ expected_display의 action은 반드시 아래 목록에 있는 이름만 사용
 
 사용 가능한 display action 목록:
 ${AVAILABLE_DISPLAY_ACTIONS.map((a) => '- ' + a).join('\n')}
+
+각 시나리오의 실제 데이터는 아래와 같아. expectMileageDisplayed에 들어갈 값은
+반드시 여기 적힌 값과 정확히 일치해야 해. 절대 추측하거나 임의의 숫자를 만들어내지 마.
+${JSON.stringify(REPORT_SCENARIOS, null, 2)}
 `;
 
 async function generateDisplayTestCases(requirementText) {
