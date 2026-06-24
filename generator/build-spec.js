@@ -6,7 +6,7 @@ const Handlebars = require('handlebars');
 
 const tcPath = path.join(__dirname, '..', 'generated', 'testcases.json');
 const templatePath = path.join(__dirname, 'templates', 'spec.hbs');
-const outPath = path.join(__dirname, '..', 'tests', 'booking.generated.spec.ts');
+const outPath = path.join(__dirname, '..', 'tests', 'ai-candidates', 'booking.generated.spec.ts');
 
 const testCases = JSON.parse(fs.readFileSync(tcPath, 'utf8'));
 const template = Handlebars.compile(fs.readFileSync(templatePath, 'utf8'));

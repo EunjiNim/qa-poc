@@ -5,6 +5,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: write  # gh-pages 브랜치에 푸시하기 위해 필요 (peaceiris/actions-gh-pages)
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -18,9 +21,39 @@ jobs:
 
       # AI가 생성한 후보 테스트는 결과만 기록하고 빌드를 막지 않음
       - name: AI candidate tests (non-blocking)
-        run: npx playwright test tests/ai-candidates --reporter=line
+        run: npx playwright test tests/ai-candidates --reporter=line,html
         continue-on-error: true
+        env:
+          PLAYWRIGHT_HTML_REPORT: playwright-report/candidates
+          PLAYWRIGHT_HTML_OPEN: never
 
       # 검증되어 승격된 core 테스트만 배포 게이트 권한을 가짐
       - name: Core regression suite (blocking)
-        run: npx playwright test tests/core --reporter=line
+        run: npx playwright test tests/core --reporter=line,html
+        env:
+          PLAYWRIGHT_HTML_REPORT: playwright-report/core
+          PLAYWRIGHT_HTML_OPEN: never
+
+      # 두 리포트를 한 폴더에 모아서 발행하므로, 진입점 역할의 index 페이지를 만들어둔다.
+      # core가 실패해도 candidates 스텝(continue-on-error)이 끝난 뒤 always()로 항상 실행된다.
+      - name: Build report index
+        if: always()
+        run: |
+          mkdir -p playwright-report
+          cat > playwright-report/index.html << 'EOF'
+          <!DOCTYPE html>
+          <html lang="ko"><body>
+            <h1>Playwright 리포트</h1>
+            <ul>
+              <li><a href="core/index.html">Core 회귀 스위트 (배포 게이트, 실패 시 빌드 차단)</a></li>
+              <li><a href="candidates/index.html">AI 후보 테스트 (참고용, 실패해도 빌드는 통과)</a></li>
+            </ul>
+          </body></html>
+          EOF
+
+      - name: Deploy report to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        if: always() # 테스트가 실패(fail)해도 리포트 웹사이트는 무조건 생성하도록 설정
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./playwright-report
