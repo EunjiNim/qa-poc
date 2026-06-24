@@ -64,7 +64,7 @@ async function generateTestCases(requirementText) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
-      max_tokens: 1500,
+      max_tokens: 4096,
       messages: [
         { role: 'user', content: `${SCHEMA_INSTRUCTION}\n\n요구사항:\n${requirementText}` },
       ],
@@ -76,9 +76,64 @@ async function generateTestCases(requirementText) {
   }
 
   const data = await res.json();
+
+  // 추측 대신 API가 직접 알려주는 신호로 "응답이 잘렸는지" 먼저 확인한다.
+  if (data.stop_reason === 'max_tokens') {
+    throw new Error(
+      'LLM 응답이 max_tokens 제한에 걸려 중간에 잘렸습니다. generate-testcases.js의 max_tokens 값을 더 늘려보세요.'
+    );
+  }
+
   const text = data.content.map((b) => b.text || '').join('\n');
-  const cleaned = text.replace(/```json|```/g, '').trim();
-  return JSON.parse(cleaned);
+  const cleaned = text
+    .replace(/```json|```/g, '')
+    .replace(/,\s*([\]}])/g, '$1') // trailing comma 제거 (LLM이 자주 흘리는 JSON 문법 오류)
+    .trim();
+
+  try {
+    return JSON.parse(cleaned);
+  } catch (err) {
+    const debugPath = path.join(__dirname, '..', 'generated', '_raw-response-debug.txt');
+    fs.writeFileSync(debugPath, text);
+    throw new Error(
+      `LLM 응답을 JSON으로 파싱하지 못했습니다 (${err.message}). 원본 응답을 ${debugPath}에 저장했으니 확인해보세요.`
+    );
+  }
+}
+
+// 프롬프트로 규칙을 알려주는 것만으로는 LLM이 100% 따른다는 보장이 없다.
+// 그래서 생성 직후 기계적으로 검증해서, Playwright가 30초씩 기다리다 실패하기 전에
+// "값 자체가 틀렸다"는 걸 1초 안에 잡아낸다 (fail fast).
+function validateTestCases(testCases) {
+  const errors = [];
+  for (const tc of testCases) {
+    const allSteps = [...(tc.steps || []), ...(tc.verify || [])];
+    for (const step of allSteps) {
+      if (step.action === 'selectShop' && !DOMAIN_DATA.validShopNames.includes(step.args[0])) {
+        errors.push(
+          `${tc.id} (${tc.title}): selectShop에 존재하지 않는 매장명 "${step.args[0]}" 사용 ` +
+            `(유효한 값: ${DOMAIN_DATA.validShopNames.join(', ')})`
+        );
+      }
+      if (
+        (step.action === 'selectSlot' || step.action === 'expectSlotReopened') &&
+        !DOMAIN_DATA.validSlotTimes.includes(step.args[0])
+      ) {
+        errors.push(
+          `${tc.id} (${tc.title}): ${step.action}에 존재하지 않는 시간 "${step.args[0]}" 사용 ` +
+            `(유효한 값: ${DOMAIN_DATA.validSlotTimes.join(', ')})`
+        );
+      }
+    }
+  }
+
+  if (errors.length > 0) {
+    throw new Error(
+      '생성된 테스트케이스가 도메인 데이터를 위반했습니다:\n' +
+        errors.map((e) => '  - ' + e).join('\n') +
+        '\n\n같은 요구사항으로 generate를 다시 실행해보세요 (LLM 응답은 매번 달라질 수 있습니다).'
+    );
+  }
 }
 
 async function main() {
@@ -88,6 +143,7 @@ async function main() {
       '정상 결제 시에는 예약 확정 메시지가 노출되어야 한다.';
 
   const testCases = await generateTestCases(requirement);
+  validateTestCases(testCases);
 
   const outPath = path.join(__dirname, '..', 'generated', 'testcases.json');
   fs.writeFileSync(outPath, JSON.stringify(testCases, null, 2));

@@ -61,7 +61,7 @@ async function generateDisplayTestCases(requirementText) {
     },
     body: JSON.stringify({
       model: 'claude-sonnet-4-6',
-      max_tokens: 1500,
+      max_tokens: 4096,
       messages: [
         { role: 'user', content: `${SCHEMA_INSTRUCTION}\n\n화면 요구사항:\n${requirementText}` },
       ],
@@ -73,6 +73,13 @@ async function generateDisplayTestCases(requirementText) {
   }
 
   const data = await res.json();
+
+  if (data.stop_reason === 'max_tokens') {
+    throw new Error(
+      'LLM 응답이 max_tokens 제한에 걸려 중간에 잘렸습니다. generate-report-testcases.js의 max_tokens 값을 더 늘려보세요.'
+    );
+  }
+
   const text = data.content.map((b) => b.text || '').join('\n');
   const cleaned = text.replace(/```json|```/g, '').trim();
   return JSON.parse(cleaned);

@@ -1,7 +1,7 @@
 [
   {
     "id": "TC-001",
-    "title": "결제 실패 시 선택한 시간 슬롯이 다시 예약 가능 상태로 복구된다",
+    "title": "결제 실패 시 슬롯 재오픈 - 미카 정비소 10:00",
     "risk": "high",
     "steps": [
       {
@@ -38,7 +38,7 @@
   },
   {
     "id": "TC-002",
-    "title": "결제 실패 시 14:00 슬롯이 다시 예약 가능 상태로 복구된다",
+    "title": "결제 실패 시 슬롯 재오픈 - 미카 정비소 14:00",
     "risk": "high",
     "steps": [
       {
@@ -75,7 +75,118 @@
   },
   {
     "id": "TC-003",
-    "title": "결제 실패 시 16:00 슬롯이 다시 예약 가능 상태로 복구된다",
+    "title": "결제 실패 시 슬롯 재오픈 - 미카 정비소 16:00",
+    "risk": "high",
+    "steps": [
+      {
+        "action": "selectShop",
+        "args": [
+          "미카 정비소"
+        ]
+      },
+      {
+        "action": "selectSlot",
+        "args": [
+          "16:00"
+        ]
+      },
+      {
+        "action": "payWithCard",
+        "args": [
+          "0000"
+        ]
+      }
+    ],
+    "verify": [
+      {
+        "action": "expectPaymentFailed",
+        "args": []
+      },
+      {
+        "action": "expectSlotReopened",
+        "args": [
+          "16:00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "TC-004",
+    "title": "결제 실패 시 슬롯 재오픈 - 서울 모터스 10:00",
+    "risk": "high",
+    "steps": [
+      {
+        "action": "selectShop",
+        "args": [
+          "서울 모터스"
+        ]
+      },
+      {
+        "action": "selectSlot",
+        "args": [
+          "10:00"
+        ]
+      },
+      {
+        "action": "payWithCard",
+        "args": [
+          "0000"
+        ]
+      }
+    ],
+    "verify": [
+      {
+        "action": "expectPaymentFailed",
+        "args": []
+      },
+      {
+        "action": "expectSlotReopened",
+        "args": [
+          "10:00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "TC-005",
+    "title": "결제 실패 시 슬롯 재오픈 - 서울 모터스 14:00",
+    "risk": "high",
+    "steps": [
+      {
+        "action": "selectShop",
+        "args": [
+          "서울 모터스"
+        ]
+      },
+      {
+        "action": "selectSlot",
+        "args": [
+          "14:00"
+        ]
+      },
+      {
+        "action": "payWithCard",
+        "args": [
+          "0000"
+        ]
+      }
+    ],
+    "verify": [
+      {
+        "action": "expectPaymentFailed",
+        "args": []
+      },
+      {
+        "action": "expectSlotReopened",
+        "args": [
+          "14:00"
+        ]
+      }
+    ]
+  },
+  {
+    "id": "TC-006",
+    "title": "결제 실패 시 슬롯 재오픈 - 서울 모터스 16:00",
     "risk": "high",
     "steps": [
       {
@@ -111,9 +222,9 @@
     ]
   },
   {
-    "id": "TC-004",
-    "title": "정상 결제 시 예약 확정 메시지가 노출된다 (미카 정비소 10:00)",
-    "risk": "high",
+    "id": "TC-007",
+    "title": "결제 성공 시 슬롯 재오픈 없음 - 미카 정비소 10:00",
+    "risk": "medium",
     "steps": [
       {
         "action": "selectShop",
@@ -130,7 +241,7 @@
       {
         "action": "payWithCard",
         "args": [
-          "1234-5678-9012-3456"
+          "1234"
         ]
       }
     ],
@@ -142,9 +253,9 @@
     ]
   },
   {
-    "id": "TC-005",
-    "title": "정상 결제 시 예약 확정 메시지가 노출된다 (서울 모터스 14:00)",
-    "risk": "high",
+    "id": "TC-008",
+    "title": "결제 성공 시 슬롯 재오픈 없음 - 서울 모터스 14:00",
+    "risk": "medium",
     "steps": [
       {
         "action": "selectShop",
@@ -161,112 +272,7 @@
       {
         "action": "payWithCard",
         "args": [
-          "1234-5678-9012-3456"
-        ]
-      }
-    ],
-    "verify": [
-      {
-        "action": "expectConfirmed",
-        "args": []
-      }
-    ]
-  },
-  {
-    "id": "TC-006",
-    "title": "정상 결제 시 예약 확정 메시지가 노출된다 (서울 모터스 16:00)",
-    "risk": "high",
-    "steps": [
-      {
-        "action": "selectShop",
-        "args": [
-          "서울 모터스"
-        ]
-      },
-      {
-        "action": "selectSlot",
-        "args": [
-          "16:00"
-        ]
-      },
-      {
-        "action": "payWithCard",
-        "args": [
-          "1234-5678-9012-3456"
-        ]
-      }
-    ],
-    "verify": [
-      {
-        "action": "expectConfirmed",
-        "args": []
-      }
-    ]
-  },
-  {
-    "id": "TC-007",
-    "title": "결제 실패 후 슬롯 복구 시 해당 슬롯으로 재예약 및 정상 결제가 가능하다",
-    "risk": "high",
-    "steps": [
-      {
-        "action": "selectShop",
-        "args": [
-          "미카 정비소"
-        ]
-      },
-      {
-        "action": "selectSlot",
-        "args": [
-          "10:00"
-        ]
-      },
-      {
-        "action": "payWithCard",
-        "args": [
-          "0000"
-        ]
-      },
-      {
-        "action": "selectSlot",
-        "args": [
-          "10:00"
-        ]
-      },
-      {
-        "action": "payWithCard",
-        "args": [
-          "9999-8888-7777-6666"
-        ]
-      }
-    ],
-    "verify": [
-      {
-        "action": "expectConfirmed",
-        "args": []
-      }
-    ]
-  },
-  {
-    "id": "TC-008",
-    "title": "[POM 확장 필요] 정상 결제 후 슬롯이 예약 불가 상태로 유지된다",
-    "risk": "low",
-    "steps": [
-      {
-        "action": "selectShop",
-        "args": [
-          "미카 정비소"
-        ]
-      },
-      {
-        "action": "selectSlot",
-        "args": [
-          "10:00"
-        ]
-      },
-      {
-        "action": "payWithCard",
-        "args": [
-          "1234-5678-9012-3456"
+          "5678"
         ]
       }
     ],

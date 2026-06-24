@@ -1,0 +1,118 @@
+```json
+[
+  {
+    "id": "TC-001",
+    "title": "결제 실패 시 슬롯 재개방 - 미카 정비소 10:00",
+    "risk": "high",
+    "steps": [
+      { "action": "selectShop", "args": ["미카 정비소"] },
+      { "action": "selectSlot", "args": ["10:00"] },
+      { "action": "payWithCard", "args": ["0000"] }
+    ],
+    "verify": [
+      { "action": "expectPaymentFailed", "args": [] },
+      { "action": "expectSlotReopened", "args": ["10:00"] }
+    ]
+  },
+  {
+    "id": "TC-002",
+    "title": "결제 실패 시 슬롯 재개방 - 미카 정비소 14:00",
+    "risk": "high",
+    "steps": [
+      { "action": "selectShop", "args": ["미카 정비소"] },
+      { "action": "selectSlot", "args": ["14:00"] },
+      { "action": "payWithCard", "args": ["0000"] }
+    ],
+    "verify": [
+      { "action": "expectPaymentFailed", "args": [] },
+      { "action": "expectSlotReopened", "args": ["14:00"] }
+    ]
+  },
+  {
+    "id": "TC-003",
+    "title": "결제 실패 시 슬롯 재개방 - 미카 정비소 16:00",
+    "risk": "high",
+    "steps": [
+      { "action": "selectShop", "args": ["미카 정비소"] },
+      { "action": "selectSlot", "args": ["16:00"] },
+      { "action": "payWithCard", "args": ["0000"] }
+    ],
+    "verify": [
+      { "action": "expectPaymentFailed", "args": [] },
+      { "action": "expectSlotReopened", "args": ["16:00"] }
+    ]
+  },
+  {
+    "id": "TC-004",
+    "title": "결제 실패 시 슬롯 재개방 - 서울 모터스 10:00",
+    "risk": "high",
+    "steps": [
+      { "action": "selectShop", "args": ["서울 모터스"] },
+      { "action": "selectSlot", "args": ["10:00"] },
+      { "action": "payWithCard", "args": ["0000"] }
+    ],
+    "verify": [
+      { "action": "expectPaymentFailed", "args": [] },
+      { "action": "expectSlotReopened", "args": ["10:00"] }
+    ]
+  },
+  {
+    "id": "TC-005",
+    "title": "결제 실패 시 슬롯 재개방 - 서울 모터스 14:00",
+    "risk": "high",
+    "steps": [
+      { "action": "selectShop", "args": ["서울 모터스"] },
+      { "action": "selectSlot", "args": ["14:00"] },
+      { "action": "payWithCard", "args": ["0000"] }
+    ],
+    "verify": [
+      { "action": "expectPaymentFailed", "args": [] },
+      { "action": "expectSlotReopened", "args": ["14:00"] }
+    ]
+  },
+  {
+    "id": "TC-006",
+    "title": "결제 실패 시 슬롯 재개방 - 서울 모터스 16:00",
+    "risk": "high",
+    "steps": [
+      { "action": "selectShop", "args": ["서울 모터스"] },
+      { "action": "selectSlot", "args": ["16:00"] },
+      { "action": "payWithCard", "args": ["0000"] }
+    ],
+    "verify": [
+      { "action": "expectPaymentFailed", "args": [] },
+      { "action": "expectSlotReopened", "args": ["16:00"] }
+    ]
+  },
+  {
+    "id": "TC-007",
+    "title": "결제 성공 시 슬롯 재개방 없음 - 미카 정비소 10:00",
+    "risk": "medium",
+    "steps": [
+      { "action": "selectShop", "args": ["미카 정비소"] },
+      { "action": "selectSlot", "args": ["10:00"] },
+      { "action": "payWithCard", "args": ["1234"] }
+    ],
+    "verify": [
+      { "action": "expectConfirmed", "args": [] }
+    ]
+  },
+  {
+    "id": "TC-008",
+    "title": "결제 성공 시 슬롯 재개방 없음 - 서울 모터스 14:00",
+    "risk": "medium",
+    "steps": [
+      { "action": "selectShop", "args": ["서울 모터스"] },
+      { "action": "selectSlot", "args": ["14:00"] },
+      { "action": "payWithCard", "args": ["5678"] }
+    ],
+    "verify": [
+      { "action": "expectConfirmed", "args": [] }
+    ]
+  },
+  {
+    "id": "TC-009",
+    "title": "[POM 확장 필요] 결제 실패 후 재개방된 슬롯을 다른 사용자가 예약 가능한지 확인",
+    "risk": "low",
+    "steps": [
+      { "action": "selectSh
