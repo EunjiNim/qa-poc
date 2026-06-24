@@ -25,3 +25,9 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+    - name: Deploy report to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v4
+      if: always() # 테스트가 실패(fail)해도 리포트 웹사이트는 무조건 생성하도록 설정
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./playwright-report
