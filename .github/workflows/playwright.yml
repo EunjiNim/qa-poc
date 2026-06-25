@@ -34,12 +34,7 @@ jobs:
           PLAYWRIGHT_HTML_REPORT: playwright-report/core
           PLAYWRIGHT_HTML_OPEN: never
 
-      - name: Clean up report folder
-        run: rm -rf playwright-report/* # 배포 전 항상 폴더를 비움
-        if: always()    
-             
-      # 두 리포트를 한 폴더에 모아서 발행하므로, 진입점 역할의 index 페이지를 만들어둔다.
-      # core가 실패해도 candidates 스텝(continue-on-error)이 끝난 뒤 always()로 항상 실행된다.
+# 두 리포트를 한 폴더에 모아서 발행하므로, 진입점 역할의 index 페이지를 만들어둔다.
       - name: Build report index
         if: always()
         run: |
@@ -55,9 +50,14 @@ jobs:
           </body></html>
           EOF
 
+      # ⭐ [디버깅 스텝 추가] 배포 직전 폴더에 진짜 무슨 파일이 있는지 눈으로 확인합니다.
+      - name: Check generated report files
+        if: always()
+        run: ls -R playwright-report
+
       - name: Deploy report to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
-        if: always() # 테스트가 실패(fail)해도 리포트 웹사이트는 무조건 생성하도록 설정
+        if: always() 
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./playwright-report
