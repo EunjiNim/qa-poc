@@ -34,6 +34,10 @@ jobs:
           PLAYWRIGHT_HTML_REPORT: playwright-report/core
           PLAYWRIGHT_HTML_OPEN: never
 
+      - name: Clean up report folder
+        run: rm -rf playwright-report/* # 배포 전 항상 폴더를 비움
+        if: always()    
+             
       # 두 리포트를 한 폴더에 모아서 발행하므로, 진입점 역할의 index 페이지를 만들어둔다.
       # core가 실패해도 candidates 스텝(continue-on-error)이 끝난 뒤 always()로 항상 실행된다.
       - name: Build report index
